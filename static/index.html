@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Virtual Pharmacist</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+    <header>
+        <h1>Virtual Pharmacist</h1>
+        <p class="subtitle">
+            Консультация по лекарственным средствам и их применению
+        </p>
+    </header>
+
+    <section id="chat"></section>
+
+    <section id="suggestions-container">
+        <div class="suggestions-title">
+            Рекомендуемые уточняющие вопросы
+        </div>
+        <div id="suggestions"></div>
+    </section>
+
+    <footer class="input">
+        <input
+            id="input"
+            placeholder="Опишите симптомы или задайте вопрос о препаратах..."
+            autocomplete="off"
+        />
+        <button onclick="send()">Отправить</button>
+    </footer>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

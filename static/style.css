@@ -1,0 +1,113 @@
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #e9f7ef, #fdfefe);
+    margin: 0;
+    padding: 0;
+}
+
+#app {
+    width: 720px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 28px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+header h1 {
+    margin: 0;
+    color: #1e8449;
+    font-weight: 600;
+}
+
+.subtitle {
+    color: #5d6d7e;
+    font-size: 14px;
+    margin-top: 6px;
+}
+
+#chat {
+    border: 1px solid #d5f5e3;
+    border-radius: 10px;
+    padding: 16px;
+    background: #fbfefc;
+    min-height: 260px;
+    margin-bottom: 20px;
+    overflow-y: auto;
+}
+
+.msg {
+    margin-bottom: 12px;
+    line-height: 1.45;
+}
+
+.msg b {
+    color: #117a65;
+}
+
+#suggestions-container {
+    background: #f4f9f7;
+    border: 1px dashed #a9dfbf;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 18px;
+}
+
+.suggestions-title {
+    font-size: 13px;
+    color: #1d8348;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+#suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.suggestion-btn {
+    background: #d4efdf;
+    border: none;
+    border-radius: 18px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #145a32;
+}
+
+.suggestion-btn:hover {
+    background: #a9dfbf;
+}
+
+.input {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #d5f5e3;
+    font-size: 14px;
+}
+
+button {
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: none;
+    background: #1e8449;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background: #196f3d;
+}

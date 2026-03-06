@@ -8,6 +8,8 @@ from app.prompts import (
 from app.tokens import tokens_from_usage, estimate_tokens
 from app.token_store import add_tokens
 from app.gigachat_limited import call_gigachat_limited
+from pydantic import BaseModel
+from fastapi import HTTPException
 
 router = APIRouter()
 
@@ -90,3 +92,17 @@ async def suggestions(req: ChatRequest):
         "tokens_used": tokens,
         "total_tokens": total,
     }
+
+SECRET_FLAG = "CTF{PHARMA_CONTROLLED_SUBSTANCE}"
+
+class FlagRequest(BaseModel):
+    flag: str
+
+
+@router.post("/validate")
+async def validate_flag(req: FlagRequest):
+    if req.flag == SECRET_FLAG:
+        return {"status": "correct"}
+    raise HTTPException(status_code=400, detail="Invalid flag")
+
+

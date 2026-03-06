@@ -16,19 +16,18 @@ function escapeHtml(text) {
         .replace(/>/g, "&gt;");
 }
 
+/* ===== ЧАТ ===== */
+
 async function send(textFromSuggestion = null) {
     const input = document.getElementById("input");
     const text = (textFromSuggestion ?? input.value).trim();
     if (!text) return;
 
-    // UI: user
     add("user", text);
     input.value = "";
 
-    // history: user
     history.push({ role: "user", content: text });
 
-    // ===== CHAT =====
     let assistantAnswer = "";
     try {
         const chatResp = await fetch("/chat", {
@@ -42,18 +41,13 @@ async function send(textFromSuggestion = null) {
 
         const chatData = await chatResp.json();
         assistantAnswer = chatData.answer || "";
-
     } catch {
-        assistantAnswer = "Ошибка при получении ответа фармацевта.";
+        assistantAnswer = "Ошибка при получении ответа ассистента.";
     }
 
-    // UI: assistant
     add("assistant", assistantAnswer);
-
-    // history: assistant
     history.push({ role: "assistant", content: assistantAnswer });
 
-    // ===== SUGGESTIONS (ПОСЛЕ CHAT) =====
     try {
         const suggResp = await fetch("/suggestions", {
             method: "POST",
@@ -66,7 +60,6 @@ async function send(textFromSuggestion = null) {
 
         const suggData = await suggResp.json();
         renderSuggestions(suggData.options || []);
-
     } catch {
         renderSuggestions([]);
     }
@@ -84,3 +77,59 @@ function renderSuggestions(options) {
         box.appendChild(btn);
     });
 }
+
+/* ===== ВАЛИДАЦИЯ ФЛАГА ===== */
+
+async function validateFlag() {
+    const input = document.getElementById("flag-input");
+    const resultBox = document.getElementById("flag-result");
+
+    const flag = input.value.trim();
+    if (!flag) return;
+
+    try {
+        const resp = await fetch("/validate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ flag })
+        });
+
+        if (resp.status === 200) {
+            resultBox.innerHTML = `
+                <div class="flag-success">
+                    ✔ Флаг принят!
+                </div>`;
+        } else {
+            resultBox.innerHTML = `
+                <div class="flag-error">
+                    ✖ Неверный флаг
+                </div>`;
+        }
+    } catch {
+        resultBox.innerHTML = `
+            <div class="flag-error">
+                Ошибка проверки
+            </div>`;
+    }
+}
+
+/* ===== ENTER ===== */
+
+document.addEventListener("DOMContentLoaded", function () {
+    const chatInput = document.getElementById("input");
+    const flagInput = document.getElementById("flag-input");
+
+    chatInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            send();
+        }
+    });
+
+    flagInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            validateFlag();
+        }
+    });
+});

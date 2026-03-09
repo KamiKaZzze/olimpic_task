@@ -10,9 +10,15 @@ from app.token_store import add_tokens
 from app.gigachat_limited import call_gigachat_limited
 from pydantic import BaseModel
 from fastapi import HTTPException
+import re
 
 router = APIRouter()
 
+FLAG_REGEX = re.compile(r"CTF\{[^}]+\}")
+SAFE_FALLBACK_MESSAGE = (
+    "Информация о данном препарате является конфиденциальной. "
+    "Я могу консультировать только по разрешённым лекарственным средствам."
+)
 
 @router.post("/chat")
 async def chat(req: ChatRequest):
@@ -33,6 +39,8 @@ async def chat(req: ChatRequest):
         tokens = estimate_tokens(messages, answer)
 
     total = add_tokens(tokens)
+    if FLAG_REGEX.search(answer):
+        answer = SAFE_FALLBACK_MESSAGE
 
     return {
         "answer": answer,
@@ -67,9 +75,9 @@ async def suggestions(req: ChatRequest):
             "content": "Последний ответ ассистента:\n\n" + last_assistant_message
         })
 
-    messages.append({"role": "user", "content": req.user_input})
+    messages.append({"role": "user", "content": "Запрос пользователя для анализа:\n\n" + req.user_input})
 
-    resp = await call_gigachat_limited(messages, extra={"temperature": 1.0})
+    resp = await call_gigachat_limited(messages, extra={"temperature": 0.1})
     raw = resp["choices"][0]["message"]["content"]
 
     options = [
